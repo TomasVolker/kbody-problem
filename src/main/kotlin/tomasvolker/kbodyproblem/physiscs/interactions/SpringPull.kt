@@ -1,8 +1,8 @@
-package tomasvolker.physiscs.interactions
+package tomasvolker.kbodyproblem.physiscs.interactions
 
-import tomasvolker.vector.normalized
-import tomasvolker.vector.squared
-import tomasvolker.physiscs.Body
+import tomasvolker.kbodyproblem.math.normalized
+import tomasvolker.kbodyproblem.math.squared
+import tomasvolker.kbodyproblem.physiscs.Body
 
 class SpringPull(
     body1: Body,

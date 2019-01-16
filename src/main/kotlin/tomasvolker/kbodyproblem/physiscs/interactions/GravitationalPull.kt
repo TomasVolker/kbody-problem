@@ -1,8 +1,8 @@
-package tomasvolker.physiscs.interactions
+package tomasvolker.kbodyproblem.physiscs.interactions
 
-import tomasvolker.vector.normSquared
-import tomasvolker.vector.normalized
-import tomasvolker.physiscs.Body
+import tomasvolker.kbodyproblem.math.normSquared
+import tomasvolker.kbodyproblem.math.normalized
+import tomasvolker.kbodyproblem.physiscs.Body
 
 val G: Double = 10.0
 

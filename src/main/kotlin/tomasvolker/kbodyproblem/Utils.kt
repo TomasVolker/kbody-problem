@@ -1,4 +1,7 @@
-package tomasvolker
+package tomasvolker.kbodyproblem
+
+import java.util.Random as JavaRandom
+import org.openrndr.resourceUrl
 
 inline fun <T> List<T>.forAllPairs(block: (item1: T, item2: T) -> Unit) {
 
@@ -15,3 +18,6 @@ inline fun <T> List<T>.forAllPairs(block: (item1: T, item2: T) -> Unit) {
     }
 
 }
+
+inline fun <reified T> resourceUrl(name: String) =
+        resourceUrl(name, T::class.java)

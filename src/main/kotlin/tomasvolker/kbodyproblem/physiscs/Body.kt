@@ -1,13 +1,18 @@
-package tomasvolker.physiscs
+package tomasvolker.kbodyproblem.physiscs
 
-import tomasvolker.vector.*
+import org.openrndr.color.ColorRGBa
+import org.openrndr.math.Vector3
+import org.openrndr.math.times
+import tomasvolker.kbodyproblem.math.*
+import kotlin.random.Random
 
 class Body(
-    var position: Vector3 = ORIGIN,
-    var velocity: Vector3 = V3_ZERO,
-    var acceleration: Vector3 = V3_ZERO,
+    var position: Vector3 = Vector3.ZERO,
+    var velocity: Vector3 = Vector3.ZERO,
+    var acceleration: Vector3 = Vector3.ZERO,
     var mass: Double = 1.0,
-    var radius: Double = 1.0
+    var radius: Double = 1.0,
+    var color: ColorRGBa = Random.nextColor()
 ) {
 
     val speed: Double
@@ -33,7 +38,7 @@ class Body(
 
     val kineticEnergy: Double get() = 0.5 * mass * velocity.normSquared()
 
-    fun angularMomentum(reference: Vector3 = ORIGIN): Vector3 =
+    fun angularMomentum(reference: Vector3 = Vector3.ZERO): Vector3 =
            (position - reference) cross  momentum
 
     fun applyForce(force: Vector3) {
@@ -43,12 +48,10 @@ class Body(
     fun step(time: Double) {
         velocity += time * acceleration
         position += time * velocity
-        acceleration = V3_ZERO
+        acceleration = Vector3.ZERO
     }
 
 }
-
-inline fun body(init: Body.()->Unit) = Body().apply(init)
 
 fun distanceBetween(body1: Body, body2: Body): Double =
     (body2.position - body1.position).norm()

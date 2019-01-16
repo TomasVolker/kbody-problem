@@ -1,7 +1,8 @@
-package tomasvolker.physiscs.interactions
+package tomasvolker.kbodyproblem.physiscs.interactions
 
-import tomasvolker.vector.Vector3
-import tomasvolker.physiscs.Body
+import org.openrndr.math.Vector3
+import tomasvolker.kbodyproblem.math.norm
+import tomasvolker.kbodyproblem.physiscs.Body
 
 abstract class BodyInteraction(
     val body1: Body,

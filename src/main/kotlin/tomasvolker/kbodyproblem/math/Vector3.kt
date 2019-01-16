@@ -1,5 +1,7 @@
-package tomasvolker.vector
+package tomasvolker.kbodyproblem.math
 
+import org.openrndr.math.Vector3
+import org.openrndr.math.transforms.transform
 import java.lang.Math.cbrt
 import kotlin.math.*
 
@@ -8,7 +10,7 @@ fun Double.squared() = this * this
 fun sphereVolume(radius: Double) = 4.0 / 3.0 * PI * radius.pow(3)
 
 fun sphereRadius(volume: Double) = cbrt(volume * 3.0 / (4.0 * PI))
-
+/*
 data class Vector3(
         val x: Double,
         val y: Double,
@@ -48,12 +50,12 @@ data class Vector3(
     override fun toString() = "[%.4f, %.4f, %.4f]".format(x, y, z)
 
 }
+*/
 
-fun Vector3.rotateXY(angle: Double) =
-        Vector3(this.x * cos(angle) - this.y * sin(angle), this.x * sin(angle) + this.y * cos(angle), this.z)
+fun Vector3.rotate(axis: Vector3, degrees: Double): Vector3 =
+    transform { rotate(axis = axis.normalized, degrees = degrees) } * this
 
-operator fun Double.times(vector2: Vector3) = vector2 * this
-
+fun Vector3.norm() = length
 fun Vector3.normSquared() = x * x + y * y + z * z
 
 infix fun Vector3.longerThan(value: Number): Boolean =

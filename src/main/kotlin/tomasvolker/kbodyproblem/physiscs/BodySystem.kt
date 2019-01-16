@@ -1,17 +1,18 @@
-package tomasvolker.physiscs
+package tomasvolker.kbodyproblem.physiscs
 
-import tomasvolker.forAllPairs
-import tomasvolker.physiscs.interactions.BodyInteraction
-import tomasvolker.physiscs.interactions.GravitationalPull
-import tomasvolker.vector.*
+import org.openrndr.math.Vector3
+import tomasvolker.kbodyproblem.forAllPairs
+import tomasvolker.kbodyproblem.physiscs.interactions.BodyInteraction
+import tomasvolker.kbodyproblem.physiscs.interactions.GravitationalPull
+import tomasvolker.kbodyproblem.math.*
 
 class BodySystem(
     bodies: Iterable<Body> = emptyList(),
     interactions: Iterable<BodyInteraction> = emptyList()
 ) {
 
-    private val mutableBodyList: MutableList<Body> = bodies.distinct().toMutableList()
-    private val mutableInteractionList: MutableList<BodyInteraction> = interactions.distinct().toMutableList()
+    private val mutableBodyList = bodies.distinct().toMutableList()
+    private val mutableInteractionList = interactions.distinct().toMutableList()
 
     val bodyList: List<Body>
         get() = mutableBodyList
@@ -19,23 +20,37 @@ class BodySystem(
     val interactionList: List<BodyInteraction>
         get() = mutableInteractionList
 
-    fun step(time: Double) {
+    fun addBody(body: Body) {
+        mutableBodyList.add(body)
+    }
 
-        processCollisions()
+    fun addInteraction(interaction: BodyInteraction) {
+        mutableInteractionList.add(interaction)
+    }
+
+    fun removeInteraction(interaction: BodyInteraction) {
+        mutableInteractionList.remove(interaction)
+    }
+
+    fun step(time: Double): Boolean {
+
+        bodyList.forEach { it.step(time) }
+
+        val collision = processCollisions()
 
         interactionList.forEach { it.applyForces() }
 
-        bodyList.forEach {
-            it.step(time)
-        }
-
+        return collision
     }
 
-    fun processCollisions() {
+    private fun processCollisions(): Boolean {
+
+        var collision = false
 
         while (true) {
 
-            val bodies = searchCollision()?.toList() ?: return
+            val bodies = searchCollision()?.toList() ?: return collision
+            collision = true
 
             mutableBodyList.removeAll(bodies)
             mutableInteractionList.removeAll {
@@ -58,19 +73,7 @@ class BodySystem(
 
     }
 
-    fun addBody(body: Body) {
-        mutableBodyList.add(body)
-    }
-
-    fun addInteraction(interaction: BodyInteraction) {
-        mutableInteractionList.add(interaction)
-    }
-
-    fun removeInteraction(interaction: BodyInteraction) {
-        mutableInteractionList.remove(interaction)
-    }
-
-    fun searchCollision(): Pair<Body, Body>? {
+    private fun searchCollision(): Pair<Body, Body>? {
 
         bodyList.forAllPairs { body1, body2 ->
 
@@ -93,7 +96,7 @@ class BodySystem(
     fun momentum() =
         bodyList.momentum()
 
-    fun angularMomentum(reference: Vector3 = ORIGIN) =
+    fun angularMomentum(reference: Vector3 = Vector3.ZERO) =
         bodyList.angularMomentum(reference)
 
     fun totalEnergy() = kineticEnergy() + potentialEnergy()
