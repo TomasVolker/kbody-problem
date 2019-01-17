@@ -7,10 +7,10 @@ This repository contains a simple
 to visualize the 
 [n-body problem](https://en.wikipedia.org/wiki/N-body_problem). 
 
-The implementation is done in Kotlin and graphics implemented 
-in [OpenRNDR](https://openrndr.org/).
+The implementation is done in Kotlin. Visualization is implemented 
+using [OpenRNDR](https://openrndr.org/).
 
-To run the application, simple execute the `run` task on the
+To run the application, simply execute the `run` task on the
 gradle wrapper:
 ```
 ./gradlew run
