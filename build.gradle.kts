@@ -30,6 +30,7 @@ dependencies {
 
     compile("org.openrndr:openrndr-core:$openrndrVersion")
     compile("org.openrndr:openrndr-extensions:$openrndrVersion")
+    compile("org.openrndr:openrndr-ffmpeg:$openrndrVersion")
     compile("com.github.edwinrndr:openrndr-dnky:2d84175c0f")
     compile("com.github.openrndr.orx:orx-mesh-generators:v0.0.14")
 

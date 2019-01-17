@@ -11,6 +11,7 @@ import org.openrndr.draw.FontImageMap
 import org.openrndr.draw.isolated
 import org.openrndr.extensions.Debug3D
 import org.openrndr.extras.meshgenerators.sphereMesh
+import org.openrndr.ffmpeg.ScreenRecorder
 import org.openrndr.math.Matrix44
 import org.openrndr.math.Vector3
 import org.openrndr.math.transforms.translate
@@ -19,6 +20,7 @@ import tomasvolker.kbodyproblem.resourceUrl
 
 fun main() = application(
     configuration = configuration {
+        title = "K-Body Problem"
         width = 1200
         height = 800
         windowResizable = true
@@ -42,9 +44,7 @@ class KBodyProblem(
             size = 16.0
         )
 
-        extend(ExtensionStage.AFTER_DRAW) {
-            printMagnitudes(drawer)
-        }
+        //extend(ScreenRecorder())
 
         extend(
             Debug3D(
@@ -63,7 +63,9 @@ class KBodyProblem(
 
         extend { update() }
 
-
+        extend(ExtensionStage.AFTER_DRAW) {
+            printMagnitudes(drawer)
+        }
 
     }
 
@@ -85,26 +87,40 @@ class KBodyProblem(
             fontMap = font
             fill = ColorRGBa.WHITE
 
-            translate(10.0, 16.0)
-            text("Total mass: %g".format(bodySystem.totalMass()))
-            translate(0.0, 16.0)
-            text("Center of Mass position: %s".format(bodySystem.centerOfMassPosition().printToString()))
-            translate(0.0, 16.0)
-            text("Center of Mass velocity: %s".format(bodySystem.centerOfMassVelocity().printToString()))
-            translate(0.0, 16.0)
-            text("Momentum: %s".format(bodySystem.momentum().printToString()))
-            translate(0.0, 16.0)
-            text("Angular Momentum: %s".format(bodySystem.angularMomentum().printToString()))
-            translate(0.0, 16.0)
-            text("Potential Energy: %g".format(bodySystem.potentialEnergy()))
-            translate(0.0, 16.0)
-            text("Kinetic Energy: %g".format(bodySystem.kineticEnergy()))
-            translate(0.0, 16.0)
-            text("Total Energy: %g".format(bodySystem.totalEnergy()))
+            translate(16.0, 16.0)
+
+            printVariables(
+                mapOf(
+                    "Total mass" to bodySystem.totalMass(),
+                    "Center of Mass position" to bodySystem.centerOfMassPosition(),
+                    "Center of Mass velocity" to bodySystem.centerOfMassVelocity(),
+                    "Momentum" to bodySystem.momentum(),
+                    "Angular Momentum" to bodySystem.angularMomentum(),
+                    "Potential Energy" to bodySystem.potentialEnergy(),
+                    "Kinetic Energy" to bodySystem.kineticEnergy(),
+                    "Total Energy" to bodySystem.totalEnergy()
+                )
+            )
+
         }
     }
 
-    fun Vector3.printToString() = "[%g, %g, %g]".format(x, y, z)
+    fun Drawer.printVariables(values: Map<String, Any>) {
+
+        values.forEach { name, value ->
+
+            val string = when(value) {
+                is Double -> "%g".format(value)
+                is Vector3 -> "[%g, %g, %g]".format(value.x, value.y, value.z)
+                else -> toString()
+            }
+
+            text("%s: %s".format(name, string))
+            translate(0.0, 16.0)
+        }
+
+
+    }
 
     private fun Scene.populate(bodySystem: BodySystem) {
 
